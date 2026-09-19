@@ -1,4 +1,4 @@
-﻿package com.thegibbonn.extension;
+package com.thegibbonn.extension;
 
 import android.content.Context;
 import android.graphics.Bitmap;

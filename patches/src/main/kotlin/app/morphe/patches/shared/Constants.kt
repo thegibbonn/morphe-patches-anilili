@@ -1,4 +1,4 @@
-﻿package app.morphe.patches.shared
+package app.morphe.patches.shared
 
 import app.morphe.patcher.patch.ApkFileType
 import app.morphe.patcher.patch.AppTarget
