@@ -1,14 +1,13 @@
-group = "app.template"
+group = "com.thegibbonn.patches"
 
 patches {
-    // TODO: Update this section with your project details.
     about {
-        name = "UserXYZ Patches"
-        description = "Patches for apps I like"
-        source = "git@github.com:UserXYZ/morphe-patches.git"
-        author = "Awesome dev"
-        contact = "na"
-        website = "na"
+        name = "Anilili Patches"
+        description = "Patches for Anilili to fix recycled bitmap crashes on Android 14/15+"
+        source = "git@github.com:thegibbonn/morphe-patches-anilili.git"
+        author = "thegibbonn"
+        contact = "https://github.com/thegibbonn"
+        website = "https://github.com/thegibbonn/morphe-patches-anilili"
         license = "GPLv3"
     }
 }

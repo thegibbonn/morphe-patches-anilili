@@ -1,7 +1,11 @@
-extension {
+﻿extension {
     name = "extensions/extension.mpe"
 }
 
 android {
-    namespace = "app.template.extension"
+    namespace = "com.thegibbonn.extension"
+}
+
+dependencies {
+    compileOnly("androidx.core:core:1.12.0")
 }
