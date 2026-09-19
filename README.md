@@ -20,7 +20,17 @@ Or manually add it in Morphe Manager:
 ## 🩹 Patches List
 
 <!-- PATCHES_START EXPANDED -->
-- **Fix Recycled Bitmap Crash** (`com.miruronative`): Fixes recycled bitmap crashes on modern Android versions (Android 14 / 15+) during media metadata updates and notification creation. Supports all current and future versions.
+> **[v1.0.0](https://github.com/thegibbonn/morphe-patches-anilili/releases/tag/v1.0.0)**&nbsp;&nbsp;•&nbsp;&nbsp;`main`&nbsp;&nbsp;•&nbsp;&nbsp;1 patches total
+<details open>
+<summary>📦 Anilili&nbsp;&nbsp;•&nbsp;&nbsp;1 patch</summary>
+<br>
+
+| 💊&nbsp;Patch | 📜&nbsp;Description | ⚙️&nbsp;Options |
+|----------|----------------|-----------|
+| [Fix Recycled Bitmap Crash](#fix-recycled-bitmap-crash) | Fixes recycled bitmap crashes on Android 14/15+ during media playback metadata updates and notification creation. |  |
+
+</details>
+
 <!-- PATCHES_END -->
 
 ---
