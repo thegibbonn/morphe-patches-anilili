@@ -8,6 +8,11 @@ import com.android.tools.smali.dexlib2.iface.instruction.formats.Instruction21c
 import com.android.tools.smali.dexlib2.iface.instruction.formats.Instruction35c
 import com.android.tools.smali.dexlib2.iface.reference.MethodReference
 
+private const val MEDIA_METADATA_BUILDER = "Landroid/media/MediaMetadata\$Builder;"
+private const val ICON_CLASS = "Landroid/graphics/drawable/Icon;"
+private const val ICON_COMPAT_CLASS = "Landroidx/core/graphics/drawable/IconCompat;"
+private const val GUARD_CLASS = "Lcom/thegibbonn/extension/BitmapCrashGuard;"
+
 @Suppress("unused")
 val fixRecycledBitmapCrashPatch = bytecodePatch(
     name = "Fix Recycled Bitmap Crash",
@@ -24,9 +29,9 @@ val fixRecycledBitmapCrashPatch = bytecodePatch(
                 m.implementation?.instructions?.any { instr ->
                     if (instr is ReferenceInstruction && instr.reference is MethodReference) {
                         val ref = instr.reference as MethodReference
-                        (ref.definingClass == "Landroid/media/MediaMetadata$Builder;" && ref.name == "putBitmap") ||
-                        (ref.definingClass == "Landroid/graphics/drawable/Icon;" && (ref.name == "createWithBitmap" || ref.name == "createWithAdaptiveBitmap")) ||
-                        (ref.definingClass == "Landroidx/core/graphics/drawable/IconCompat;" && (ref.name == "toIcon" || ref.name == "e"))
+                        (ref.definingClass == MEDIA_METADATA_BUILDER && ref.name == "putBitmap") ||
+                        (ref.definingClass == ICON_CLASS && (ref.name == "createWithBitmap" || ref.name == "createWithAdaptiveBitmap")) ||
+                        (ref.definingClass == ICON_COMPAT_CLASS && (ref.name == "toIcon" || ref.name == "e"))
                     } else false
                 } ?: false
             }
@@ -46,20 +51,20 @@ val fixRecycledBitmapCrashPatch = bytecodePatch(
                         val methodName = ref.name
 
                         // 1. MediaMetadata.Builder.putBitmap
-                        if (definingClass == "Landroid/media/MediaMetadata$Builder;" && methodName == "putBitmap") {
+                        if (definingClass == MEDIA_METADATA_BUILDER && methodName == "putBitmap") {
                             if (instruction is Instruction35c) {
                                 val vBld = "v${instruction.registerC}"
                                 val vKey = "v${instruction.registerD}"
                                 val vBm = "v${instruction.registerE}"
                                 mutableMethod.replaceInstruction(
                                     instrIndex,
-                                    "invoke-static {$vBld, $vKey, $vBm}, Lcom/thegibbonn/extension/BitmapCrashGuard;->safePutBitmap(Landroid/media/MediaMetadata$Builder;Ljava/lang/String;Landroid/graphics/Bitmap;)Landroid/media/MediaMetadata$Builder;"
+                                    "invoke-static {$vBld, $vKey, $vBm}, $GUARD_CLASS->safePutBitmap($MEDIA_METADATA_BUILDER" + "Ljava/lang/String;Landroid/graphics/Bitmap;)$MEDIA_METADATA_BUILDER"
                                 )
                             }
                         }
 
                         // 2. Icon.createWithBitmap
-                        else if (definingClass == "Landroid/graphics/drawable/Icon;" && methodName == "createWithBitmap") {
+                        else if (definingClass == ICON_CLASS && methodName == "createWithBitmap") {
                             val reg = when (instruction) {
                                 is Instruction21c -> "v${instruction.registerA}"
                                 is Instruction35c -> "v${instruction.registerC}"
@@ -68,13 +73,13 @@ val fixRecycledBitmapCrashPatch = bytecodePatch(
                             if (reg != null) {
                                 mutableMethod.replaceInstruction(
                                     instrIndex,
-                                    "invoke-static {$reg}, Lcom/thegibbonn/extension/BitmapCrashGuard;->safeCreateWithBitmap(Landroid/graphics/Bitmap;)Landroid/graphics/drawable/Icon;"
+                                    "invoke-static {$reg}, $GUARD_CLASS->safeCreateWithBitmap(Landroid/graphics/Bitmap;)Landroid/graphics/drawable/Icon;"
                                 )
                             }
                         }
 
                         // 3. Icon.createWithAdaptiveBitmap
-                        else if (definingClass == "Landroid/graphics/drawable/Icon;" && methodName == "createWithAdaptiveBitmap") {
+                        else if (definingClass == ICON_CLASS && methodName == "createWithAdaptiveBitmap") {
                             val reg = when (instruction) {
                                 is Instruction21c -> "v${instruction.registerA}"
                                 is Instruction35c -> "v${instruction.registerC}"
@@ -83,19 +88,19 @@ val fixRecycledBitmapCrashPatch = bytecodePatch(
                             if (reg != null) {
                                 mutableMethod.replaceInstruction(
                                     instrIndex,
-                                    "invoke-static {$reg}, Lcom/thegibbonn/extension/BitmapCrashGuard;->safeCreateWithAdaptiveBitmap(Landroid/graphics/Bitmap;)Landroid/graphics/drawable/Icon;"
+                                    "invoke-static {$reg}, $GUARD_CLASS->safeCreateWithAdaptiveBitmap(Landroid/graphics/Bitmap;)Landroid/graphics/drawable/Icon;"
                                 )
                             }
                         }
 
                         // 4. IconCompat.toIcon or IconCompat.e
-                        else if (definingClass == "Landroidx/core/graphics/drawable/IconCompat;" && (methodName == "toIcon" || methodName == "e")) {
+                        else if (definingClass == ICON_COMPAT_CLASS && (methodName == "toIcon" || methodName == "e")) {
                             if (instruction is Instruction35c) {
                                 val vIcon = "v${instruction.registerC}"
                                 val vCtx = "v${instruction.registerD}"
                                 mutableMethod.replaceInstruction(
                                     instrIndex,
-                                    "invoke-static {$vIcon, $vCtx}, Lcom/thegibbonn/extension/BitmapCrashGuard;->safeToIcon(Landroidx/core/graphics/drawable/IconCompat;Landroid/content/Context;)Landroid/graphics/drawable/Icon;"
+                                    "invoke-static {$vIcon, $vCtx}, $GUARD_CLASS->safeToIcon(Landroidx/core/graphics/drawable/IconCompat;Landroid/content/Context;)Landroid/graphics/drawable/Icon;"
                                 )
                             }
                         }
